@@ -7,15 +7,13 @@ export class UserController {
   constructor(private userService: UserService) { }
 
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string): User {
-  //   debugger
-  //   return this.userService.getUser(id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string): User {
+    return this.userService.getUser(id);
+  }
 
-  // // @Get()
-  // findAll(): User[] {
-  //   return this.userService.getAllUsers();
-  // }
-
+  @Get()
+  findAll(): User[] {
+    return this.userService.getAllUsers();
+  }
 }

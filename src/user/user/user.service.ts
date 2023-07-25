@@ -15,7 +15,6 @@ export class UserService {
   ];
 
   getAllUsers() {
-    debugger
     return this.users;
   }
 
