@@ -1,3 +1,4 @@
+import { z } from 'nestjs-zod/z';
 export interface User {
   id: string; // uuid v4
   login: string;
@@ -7,7 +8,14 @@ export interface User {
   updatedAt: number; // timestamp of last update
 }
 
-export interface CreateUserDto {
-  login: string;
-  password: string;
-}
+export const createUserSchema = z.object({
+  login: z.string(),
+  password: z.string().min(8),
+});
+
+export const updatePasswordSchema = z.object({
+  oldPassword: z.string(),
+  newPassword: z.string().min(8),
+});
+export type UpdatePassword = z.infer<typeof updatePasswordSchema>;
+export type CreateUser = z.infer<typeof createUserSchema>;

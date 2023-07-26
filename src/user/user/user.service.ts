@@ -1,12 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto, User } from './user.models';
+import { Injectable } from '@nestjs/common';
+import { CreateUser, UpdatePassword, User } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
+import { checkExists, throwForbidden } from 'src/utils';
 
 @Injectable()
 export class UserService {
   private users: User[] = [
     {
-      id: '12345', // uuid v4
+      id: 'e1689e94-1638-40f4-936d-c8ccb7bbf3dd', // uuid v4
       login: 'login',
       password: 'password',
       version: 122, // integer number, increments on update
@@ -20,32 +21,42 @@ export class UserService {
   }
 
   getUser(id: string) {
-    if (!isUuid) {
-      throw new HttpException('user ID is invalid', HttpStatus.BAD_REQUEST);
-    } else if (!isUser) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
     return Promise.resolve(this.users.find((el) => el.id === id));
   }
 
-  createUser(userData: CreateUserDto) {
+  createUser(userData: CreateUser) {
     const user = convertUserDataToUser(userData);
     this.users.push(user);
-    return this.users;
+    return this.updateUser(user);
+  }
+
+  async updateUserPassword(id: string, userData: UpdatePassword) {
+    const user = checkExists(await this.getUser(id), 'User not found');
+    if (user.password !== userData.oldPassword) {
+      throwForbidden('Wrong password');
+    }
+    user.password = userData.newPassword;
+    return this.updateUser(user);
+  }
+
+  async deleteUser(id: string) {
+    const user = checkExists(await this.getUser(id), 'User not found');
+    this.users.filter((el) => el.id === user.id);
+    // что возвращать
+    return 'User has been deleted';
+  }
+
+  updateUser(user: User): Omit<User, 'password'> {
+    user.version++;
+    const result = {
+      ...user,
+    };
+    delete (result as any).password;
+    return result;
   }
 }
 
-// if userId is invalid (not uuid)
-function isUuid() {
-  return true;
-}
-
-// if record with id === userId doesn't exist
-function isUser() {
-  return true;
-}
-
-function convertUserDataToUser(userData: CreateUserDto) {
+function convertUserDataToUser(userData: CreateUser) {
   const id = uuidv4();
   const version = 0;
   const createdAt = new Date().valueOf();
