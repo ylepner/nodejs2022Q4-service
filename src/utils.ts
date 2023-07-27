@@ -26,3 +26,7 @@ export function checkId(id: string) {
     );
   }
 }
+
+export function throwConflict(msg: string) {
+  throw new HttpException(msg, HttpStatus.CONFLICT);
+}

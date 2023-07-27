@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUser, UpdatePassword, User } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
-import { checkExists, throwForbidden } from 'src/utils';
+import { checkExists, throwConflict, throwForbidden } from 'src/utils';
 
 @Injectable()
 export class UserService {
@@ -25,6 +25,9 @@ export class UserService {
   }
 
   createUser(userData: CreateUser) {
+    if (this.users.find((el) => el.login === userData.login)) {
+      throwConflict('User already exists');
+    }
     const user = convertUserDataToUser(userData);
     this.users.push(user);
     return this.updateUser(user);
