@@ -12,14 +12,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import {
-  createUserSchema,
-  UpdatePassword,
-  updatePasswordSchema,
-  User,
-} from './user.models';
+import { createUserSchema, updatePasswordSchema, User } from './user.models';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
 import { checkId } from 'src/utils';
 class CreateUserDto extends createZodDto(createUserSchema) { }
 class UpdatePasswordDto extends createZodDto(updatePasswordSchema) { }
@@ -46,18 +40,20 @@ export class UserController {
 
   @Post()
   @HttpCode(201)
-  async create(@Body() data: CreateUserDto,) {
+  async create(@Body() data: CreateUserDto) {
     const result = await this.userService.createUser(data);
     return result;
   }
 
   @Put(':id')
+  @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdatePasswordDto) {
     checkId(id);
+    const result = await this.userService.updateUserPassword(id, data);
+    return result;
   }
 
   @Delete(':id')
-  //написать сообщение
   @HttpCode(204)
   async remove(@Param('id') id: string) {
     checkId(id);
