@@ -41,9 +41,7 @@ export class UserService {
 
   async deleteUser(id: string) {
     const user = checkExists(await this.getUser(id), 'User not found');
-    this.users.filter((el) => el.id === user.id);
-    // что возвращать
-    return 'User has been deleted';
+    this.users = this.users.filter((el) => el.id !== user.id);
   }
 
   updateUser(user: User): Omit<User, 'password'> {
