@@ -14,7 +14,7 @@ import {
 import { UserService } from './user.service';
 import { createUserSchema, updatePasswordSchema, User } from './user.models';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
-import { checkId } from 'src/user/utils';
+import { checkId } from 'src/utils';
 class CreateUserDto extends createZodDto(createUserSchema) { }
 class UpdatePasswordDto extends createZodDto(updatePasswordSchema) { }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUser, UpdatePassword, User } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
-import { checkExists, throwConflict, throwForbidden } from 'src/user/utils';
+import { checkExists, throwConflict, throwForbidden } from 'src/utils';
 
 @Injectable()
 export class UserService {
