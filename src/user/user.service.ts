@@ -39,6 +39,7 @@ export class UserService {
       throwForbidden('Wrong password');
     }
     user.password = userData.newPassword;
+    user.updatedAt = new Date().valueOf();
     return this.updateUser(user);
   }
 
