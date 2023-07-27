@@ -10,12 +10,12 @@ export interface User {
 
 export const createUserSchema = z.object({
   login: z.string(),
-  password: z.string().min(8),
+  password: z.string(),
 });
 
 export const updatePasswordSchema = z.object({
   oldPassword: z.string(),
-  newPassword: z.string().min(8),
+  newPassword: z.string(),
 });
 export type UpdatePassword = z.infer<typeof updatePasswordSchema>;
 export type CreateUser = z.infer<typeof createUserSchema>;
