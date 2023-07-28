@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -50,6 +51,14 @@ export class TrackController {
   async update(@Param('id') id: string, @Body() data: UpdateTrackDto) {
     checkId(id);
     const result = await this.trackService.updateTrack(id, data);
+    return result;
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async remove(@Param('id') id: string) {
+    checkId(id);
+    const result = await this.trackService.deleteTrack(id);
     return result;
   }
 }

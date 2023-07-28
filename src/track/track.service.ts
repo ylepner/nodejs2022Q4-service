@@ -46,11 +46,9 @@ export class TrackService {
     this.tracks[index] = track;
     return track;
   }
-}
 
-// {
-//   "name": "Track2",
-//   "artistId": "e0123e94-1638-40f4-936d-c8ccb7bbf3dd",
-//   "albumId": "e3456e94-1638-40f4-936d-c8ccb7bbf3dd",
-//   "duration": "10202000"
-//   }
+  async deleteTrack(id: string) {
+    checkExists(await this.getTrack(id), 'Track not found');
+    this.tracks = this.tracks.filter((el) => el.id !== id);
+  }
+}
