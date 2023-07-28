@@ -5,6 +5,8 @@ import { checkExists } from 'src/utils';
 
 @Injectable()
 export class TrackService {
+  constructor() {
+  }
   private tracks: Track[] = [
     {
       id: 'e2689e94-1638-40f4-936d-c8ccb7bbf3dd',
@@ -50,5 +52,13 @@ export class TrackService {
   async deleteTrack(id: string) {
     checkExists(await this.getTrack(id), 'Track not found');
     this.tracks = this.tracks.filter((el) => el.id !== id);
+  }
+
+  updateTracksAfterArtistDeleted(id: string) {
+    this.tracks.forEach((el) => {
+      if (el.artistId === id) {
+        el.artistId = null;
+      }
+    });
   }
 }
