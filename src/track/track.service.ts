@@ -61,4 +61,12 @@ export class TrackService {
       }
     });
   }
+
+  updateTracksAfterAlbumDeleted(id: string) {
+    this.tracks.forEach((el) => {
+      if (el.albumId === id) {
+        el.albumId = null;
+      }
+    });
+  }
 }

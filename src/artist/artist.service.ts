@@ -3,11 +3,11 @@ import { Artist, UpdateArtistRequest } from './artist.models';
 import { v4 as uuidv4 } from 'uuid';
 import { checkExists } from 'src/utils';
 import { TrackService } from 'src/track/track.service';
+import { AlbumService } from 'src/album/album.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private trackService: TrackService) {
-  }
+  constructor(private trackService: TrackService, private albumService: AlbumService) { }
   private artists: Artist[] = [
     {
       id: 'e2231e94-1638-40f4-936d-c8ccb7bbf3dd',
@@ -49,6 +49,7 @@ export class ArtistService {
   async deleteArtist(id: string) {
     checkExists(await this.getArtist(id), 'Track not found');
     this.trackService.updateTracksAfterArtistDeleted(id);
+    this.albumService.updateAlbumsAfterArtistDeleted(id);
     this.artists = this.artists.filter((el) => el.id !== id);
   }
 }

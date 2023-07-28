@@ -1,9 +1,3 @@
-export interface Album {
-  id: string; // uuid v4
-  name: string;
-  year: number;
-  artistId: string | null; // refers to Artist
-}
 
 export interface Favorites {
   artists: string[]; // favorite artists ids
