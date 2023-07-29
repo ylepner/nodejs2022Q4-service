@@ -30,3 +30,11 @@ export function checkId(id: string) {
 export function throwConflict(msg: string) {
   throw new HttpException(msg, HttpStatus.CONFLICT);
 }
+
+export function isNotNull<T>(el: T | null | undefined): el is T {
+  return el != null;
+}
+
+export function throwUnprocessableEntity(msg = 'Unprocessable entity') {
+  throw new HttpException(msg, HttpStatus.UNPROCESSABLE_ENTITY);
+}
