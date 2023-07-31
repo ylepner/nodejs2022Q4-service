@@ -1,5 +1,8 @@
 # Home Library Service
 
+## Description
+Let's try to create a Home Library Service! Users can create, read, update, delete data about Artists, Tracks and Albums, add them to Favorites in their own Home Library!
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -8,19 +11,19 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone -b develop https://github.com/ylepner/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
 
 ```
-npm install
+npm install --force
 ```
 
 ## Running application
 
 ```
-npm start
+npm run start
 ```
 
 After starting the app on port (4000 as default) you can open
@@ -43,17 +46,6 @@ To run only one of all test suites
 npm run test -- <path to suite>
 ```
 
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
 
 ### Auto-fix and format
 
