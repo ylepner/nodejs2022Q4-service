@@ -17,7 +17,7 @@ export class FavoritesService {
     private artistService: ArtistService,
     private albumService: AlbumService,
     private trackService: TrackService,
-  ) { }
+  ) {}
   private favorites: Favorites = {
     artists: [],
     albums: [],

@@ -1,4 +1,4 @@
-import { z } from "nestjs-zod/z";
+import { z } from 'nestjs-zod/z';
 
 export const createArtistSchema = z.object({
   name: z.string(),

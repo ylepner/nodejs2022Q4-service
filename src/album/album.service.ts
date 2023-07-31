@@ -6,7 +6,7 @@ import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private trackService: TrackService) { }
+  constructor(private trackService: TrackService) {}
   private albums: Album[] = [];
 
   getAllAlbums(): Promise<Album[]> {

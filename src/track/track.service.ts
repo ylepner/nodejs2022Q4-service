@@ -5,7 +5,6 @@ import { checkExists } from 'src/utils';
 
 @Injectable()
 export class TrackService {
-  constructor() { }
   private tracks: Track[] = [];
 
   getAllTracks(): Promise<Track[]> {

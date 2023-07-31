@@ -16,13 +16,13 @@ import { createZodDto, ZodValidationPipe } from 'nestjs-zod';
 import { checkId } from 'src/utils';
 import { Album, createAlbumSchema } from './album.models';
 
-class CreateAlbumDto extends createZodDto(createAlbumSchema) { }
-class UpdateAlbumDto extends createZodDto(createAlbumSchema) { }
+class CreateAlbumDto extends createZodDto(createAlbumSchema) {}
+class UpdateAlbumDto extends createZodDto(createAlbumSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('album')
 export class AlbumController {
-  constructor(private albumService: AlbumService) { }
+  constructor(private albumService: AlbumService) {}
 
   @Get()
   findAll() {

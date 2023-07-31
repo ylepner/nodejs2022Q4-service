@@ -11,6 +11,7 @@ import { AlbumController } from './album/album.controller';
 import { AlbumService } from './album/album.service';
 import { FavoritesService } from './favorites/favorites.service';
 import { FavoritesController } from './favorites/favorites.controller';
+import { ArtisnpmService } from './run/artisnpm/artisnpm.service';
 
 @Module({
   imports: [],
@@ -29,6 +30,7 @@ import { FavoritesController } from './favorites/favorites.controller';
     ArtistService,
     AlbumService,
     FavoritesService,
+    ArtisnpmService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

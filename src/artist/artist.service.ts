@@ -10,7 +10,7 @@ export class ArtistService {
   constructor(
     private trackService: TrackService,
     private albumService: AlbumService,
-  ) { }
+  ) {}
   private artists: Artist[] = [];
 
   getAllArtists(): Promise<Artist[]> {

@@ -1,16 +1,9 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { checkExists, checkId } from 'src/utils';
-import { TrackService } from 'src/track/track.service';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
 
 @Controller('favs')
 export class FavoritesController {
-  constructor(private favoritesService: FavoritesService,
-    private trackService: TrackService,
-    private albumService: AlbumService,
-    private artistService: ArtistService) { }
+  constructor(private favoritesService: FavoritesService) {}
 
   @Get()
   findAll() {
