@@ -7,12 +7,18 @@ import { checkExists, throwConflict, throwForbidden } from 'src/utils';
 export class UserService {
   private users: User[] = [];
 
-  getAllUsers(): Promise<User[]> {
-    return Promise.resolve(this.users);
+  getAllUsers() {
+    const usersCopy = [...this.users];
+    usersCopy.forEach((el) => {
+      delete (el as any).password;
+    })
+    return usersCopy;
   }
 
   getUser(id: string) {
-    return Promise.resolve(this.users.find((el) => el.id === id));
+    const user = this.users.find((el) => el.id === id);
+    delete (user as any).password;
+    return user;
   }
 
   createUser(userData: CreateUser) {
