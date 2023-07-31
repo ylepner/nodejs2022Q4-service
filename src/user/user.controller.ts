@@ -12,21 +12,21 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { createUserSchema, updatePasswordSchema, User } from './user.models';
+import { createUserSchema, updatePasswordSchema, User, UserDto } from './user.models';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
 import { checkId } from 'src/utils';
-class CreateUserDto extends createZodDto(createUserSchema) {}
-class UpdatePasswordDto extends createZodDto(updatePasswordSchema) {}
+class CreateUserDto extends createZodDto(createUserSchema) { }
+class UpdatePasswordDto extends createZodDto(updatePasswordSchema) { }
 
 @UsePipes(ZodValidationPipe)
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<User> {
+  async findOne(@Param('id') id: string): Promise<UserDto> {
     checkId(id);
-    const result = await this.userService.getUser(id);
+    const result = await this.userService.getUserDto(id);
     if (!result) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -41,7 +41,7 @@ export class UserController {
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateUserDto) {
-    const result = await this.userService.createUser(data);
+    const result = this.userService.createUser(data);
     return result;
   }
 

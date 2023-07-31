@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUser, UpdatePassword, User } from './user.models';
+import { CreateUser, UpdatePassword, User, UserDto } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
 import { checkExists, throwConflict, throwForbidden } from 'src/utils';
 
@@ -7,19 +7,22 @@ import { checkExists, throwConflict, throwForbidden } from 'src/utils';
 export class UserService {
   private users: User[] = [];
 
-  getAllUsers() {
-    const usersCopy = [...this.users];
-    usersCopy.forEach((el) => {
-      delete (el as any).password;
-    })
-    return usersCopy;
+  getAllUsers(): Promise<UserDto[]> {
+    return Promise.resolve(this.users.map((el) => toUserDto(el)));
   }
 
-  getUser(id: string) {
-    const user = this.users.find((el) => el.id === id);
-    delete (user as any).password;
-    return user;
+  getUser(id: string): Promise<User | undefined> {
+    return Promise.resolve(this.users.find((el) => el.id === id));
   }
+
+  async getUserDto(id: string): Promise<UserDto | undefined> {
+    const user = await this.getUser(id);
+    if (user) {
+      return toUserDto(user);
+    }
+    return undefined;
+  }
+
 
   createUser(userData: CreateUser) {
     if (this.users.find((el) => el.login === userData.login)) {
@@ -45,13 +48,12 @@ export class UserService {
     this.users = this.users.filter((el) => el.id !== user.id);
   }
 
-  updateUser(user: User): Omit<User, 'password'> {
+  updateUser(user: User): UserDto {
     user.version++;
     const result = {
       ...user,
     };
-    delete (result as any).password;
-    return result;
+    return toUserDto(result);
   }
 }
 
@@ -67,5 +69,11 @@ function convertUserDataToUser(userData: CreateUser) {
     createdAt: createdAt,
     updatedAt: createdAt,
   };
+  return result;
+}
+
+function toUserDto(user: User): UserDto {
+  const result = { ...user };
+  delete (result as any).password;
   return result;
 }
