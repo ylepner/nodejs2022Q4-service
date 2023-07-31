@@ -7,14 +7,11 @@ import { AlbumService } from 'src/album/album.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private trackService: TrackService, private albumService: AlbumService) { }
-  private artists: Artist[] = [
-    {
-      id: 'e2231e94-1638-40f4-936d-c8ccb7bbf3dd',
-      name: 'Artist1',
-      grammy: false,
-    },
-  ];
+  constructor(
+    private trackService: TrackService,
+    private albumService: AlbumService,
+  ) { }
+  private artists: Artist[] = [];
 
   getAllArtists(): Promise<Artist[]> {
     return Promise.resolve(this.artists);

@@ -7,14 +7,7 @@ import { TrackService } from 'src/track/track.service';
 @Injectable()
 export class AlbumService {
   constructor(private trackService: TrackService) { }
-  private albums: Album[] = [
-    {
-      id: 'e2231e94-1638-40f4-936d-c8ccb7bbf3dd',
-      name: 'Album1',
-      year: 1990,
-      artistId: 'e2231e94-1638-40f4-936d-c8ccb7bbf3dd',
-    },
-  ];
+  private albums: Album[] = [];
 
   getAllAlbums(): Promise<Album[]> {
     return Promise.resolve(this.albums);

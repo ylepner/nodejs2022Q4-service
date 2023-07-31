@@ -5,17 +5,8 @@ import { checkExists } from 'src/utils';
 
 @Injectable()
 export class TrackService {
-  constructor() {
-  }
-  private tracks: Track[] = [
-    {
-      id: 'e2689e94-1638-40f4-936d-c8ccb7bbf3dd',
-      name: 'Track1',
-      artistId: 'e0123e94-1638-40f4-936d-c8ccb7bbf3dd', // refers to Artist
-      albumId: 'e3456e94-1638-40f4-936d-c8ccb7bbf3dd', // refers to Album
-      duration: 10202000, // integer number
-    },
-  ];
+  constructor() { }
+  private tracks: Track[] = [];
 
   getAllTracks(): Promise<Track[]> {
     return Promise.resolve(this.tracks);

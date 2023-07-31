@@ -4,7 +4,12 @@ import { FavoritesResponse } from './favorites.models';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';
-import { checkExists, checkId, isNotNull, throwUnprocessableEntity } from 'src/utils';
+import {
+  checkExists,
+  checkId,
+  isNotNull,
+  throwUnprocessableEntity,
+} from 'src/utils';
 
 @Injectable()
 export class FavoritesService {
@@ -14,9 +19,9 @@ export class FavoritesService {
     private trackService: TrackService,
   ) { }
   private favorites: Favorites = {
-    artists: ['e2231e94-1638-40f4-936d-c8ccb7bbf3dd'],
-    albums: ['e42231e94-1638-40f4-936d-c8ccb7bbf3dd'],
-    tracks: ['e2689e94-1638-40f4-936d-c8ccb7bbf3dd'],
+    artists: [],
+    albums: [],
+    tracks: [],
   };
 
   async getAllFavorites(): Promise<FavoritesResponse> {

@@ -5,16 +5,7 @@ import { checkExists, throwConflict, throwForbidden } from 'src/utils';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [
-    {
-      id: 'e1689e94-1638-40f4-936d-c8ccb7bbf3dd', // uuid v4
-      login: 'login',
-      password: 'password',
-      version: 122, // integer number, increments on update
-      createdAt: 12092012, // timestamp of creation
-      updatedAt: 12092012, // timestamp of last update
-    },
-  ];
+  private users: User[] = [];
 
   getAllUsers(): Promise<User[]> {
     return Promise.resolve(this.users);
