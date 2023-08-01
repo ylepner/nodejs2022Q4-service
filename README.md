@@ -17,7 +17,7 @@ git clone -b develop https://github.com/ylepner/nodejs2023Q2-service.git
 ## Installing NPM modules
 
 ```
-npm install --force
+npm install
 ```
 
 ## Running application
