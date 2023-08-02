@@ -16,13 +16,13 @@ import { Track, createTrackSchema } from './track.models';
 import { checkId } from 'src/utils';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
 
-class CreateTrackDto extends createZodDto(createTrackSchema) {}
-class UpdateTrackDto extends createZodDto(createTrackSchema) {}
+class CreateTrackDto extends createZodDto(createTrackSchema) { }
+class UpdateTrackDto extends createZodDto(createTrackSchema) { }
 
 @UsePipes(ZodValidationPipe)
 @Controller('track')
 export class TrackController {
-  constructor(private trackService: TrackService) {}
+  constructor(private trackService: TrackService) { }
 
   @Get()
   findAll() {

@@ -10,7 +10,7 @@ export class ArtistService {
   constructor(
     private trackService: TrackService,
     private albumService: AlbumService,
-  ) {}
+  ) { }
   private artists: Artist[] = [];
 
   getAllArtists(): Promise<Artist[]> {
@@ -45,8 +45,8 @@ export class ArtistService {
 
   async deleteArtist(id: string) {
     checkExists(await this.getArtist(id), 'Track not found');
-    this.trackService.updateTracksAfterArtistDeleted(id);
-    this.albumService.updateAlbumsAfterArtistDeleted(id);
+    //this.trackService.updateTracksAfterArtistDeleted(id);
+    //this.albumService.updateAlbumsAfterArtistDeleted(id);
     this.artists = this.artists.filter((el) => el.id !== id);
   }
 }

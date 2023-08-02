@@ -6,7 +6,7 @@ import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private trackService: TrackService) {}
+  constructor(private trackService: TrackService) { }
   private albums: Album[] = [];
 
   getAllAlbums(): Promise<Album[]> {
@@ -42,7 +42,7 @@ export class AlbumService {
 
   async deleteAlbum(id: string) {
     checkExists(await this.getAlbum(id), 'Album not found');
-    this.trackService.updateTracksAfterAlbumDeleted(id);
+    // this.trackService.updateTracksAfterAlbumDeleted(id);
     this.albums = this.albums.filter((el) => el.id !== id);
   }
 
