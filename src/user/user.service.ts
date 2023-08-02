@@ -1,18 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUser, UpdatePassword, User, UserDto } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
-import { checkExists, throwConflict, throwForbidden } from 'src/utils';
+import { checkExists, throwForbidden } from 'src/utils';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  private prisma: PrismaClient;
 
-  getAllUsers(): Promise<UserDto[]> {
-    return Promise.resolve(this.users.map((el) => toUserDto(el)));
+  constructor() {
+    this.prisma = new PrismaClient();
   }
 
-  getUser(id: string): Promise<User | undefined> {
-    return Promise.resolve(this.users.find((el) => el.id === id));
+  async getAllUsers(): Promise<UserDto[]> {
+    return this.prisma.user.findMany();
+  }
+
+  async getUser(id: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async createUser(userData: CreateUser) {
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        login: userData.login,
+      },
+    });
+    if (existingUser) {
+      throw new ConflictException('User already exists');
+    }
+    const data = convertUserDataToUser(userData);
+    return this.prisma.user.create({
+      data: data,
+    });
   }
 
   async getUserDto(id: string): Promise<UserDto | undefined> {
@@ -23,28 +47,23 @@ export class UserService {
     return undefined;
   }
 
-  createUser(userData: CreateUser) {
-    if (this.users.find((el) => el.login === userData.login)) {
-      throwConflict('User already exists');
-    }
-    const user = convertUserDataToUser(userData);
-    this.users.push(user);
-    return this.updateUser(user);
-  }
-
   async updateUserPassword(id: string, userData: UpdatePassword) {
     const user = checkExists(await this.getUser(id), 'User not found');
     if (user.password !== userData.oldPassword) {
       throwForbidden('Wrong password');
     }
     user.password = userData.newPassword;
-    user.updatedAt = new Date().valueOf();
+    user.updatedAt = new Date();
     return this.updateUser(user);
   }
 
   async deleteUser(id: string) {
-    const user = checkExists(await this.getUser(id), 'User not found');
-    this.users = this.users.filter((el) => el.id !== user.id);
+    checkExists(await this.getUser(id), 'User not found');
+    await this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
   }
 
   updateUser(user: User): UserDto {
@@ -59,7 +78,7 @@ export class UserService {
 function convertUserDataToUser(userData: CreateUser) {
   const id = uuidv4();
   const version = 0;
-  const createdAt = new Date().valueOf();
+  const createdAt = new Date();
   const result: User = {
     id: id,
     login: userData.login,

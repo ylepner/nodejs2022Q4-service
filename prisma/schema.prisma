@@ -3,13 +3,17 @@ datasource db {
   url      = "postgresql://postgres:example@localhost:5432/database"
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
   id          String     @id @default(uuid())
   login       String
   password    String
   version     Int        @default(0)
-  createdAt   Int
-  updatedAt   Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
   favorites   Favorites? @relation(fields: [favoritesId], references: [id])
   favoritesId String? // Foreign key that links to Favorites
 }
