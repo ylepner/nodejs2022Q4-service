@@ -23,7 +23,6 @@ export class UserService {
     return undefined;
   }
 
-
   createUser(userData: CreateUser) {
     if (this.users.find((el) => el.login === userData.login)) {
       throwConflict('User already exists');
