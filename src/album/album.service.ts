@@ -5,7 +5,6 @@ import { checkExists } from 'src/utils';
 import { TrackService } from 'src/track/track.service';
 import { PrismaClient } from '@prisma/client';
 
-
 @Injectable()
 export class AlbumService {
   private prisma: PrismaClient;

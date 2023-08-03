@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUser, UpdatePassword, User, UserDto } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
 import { checkExists, throwForbidden } from 'src/utils';
@@ -43,7 +43,7 @@ export class UserService {
 
   async updateUserPassword(id: string, userData: UpdatePassword) {
     const user = checkExists(await this.getUser(id), 'User not found');
-    console.log('Update user get', user)
+    console.log('Update user get', user);
     if (user.password !== userData.oldPassword) {
       throwForbidden('Wrong password');
     }

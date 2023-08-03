@@ -30,4 +30,4 @@ import { FavoritesController } from './favorites/favorites.controller';
     FavoritesService,
   ],
 })
-export class AppModule { }
+export class AppModule {}
