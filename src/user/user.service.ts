@@ -12,11 +12,11 @@ export class UserService {
     this.prisma = new PrismaClient();
   }
 
-  async getAllUsers(): Promise<UserDto[]> {
-    return this.prisma.user.findMany();
+  async getAllUsers() {
+    return (await this.prisma.user.findMany()).map((el) => toUserDto(el));
   }
 
-  async getUser(id: string) {
+  getUser(id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: {
         id,
@@ -25,18 +25,12 @@ export class UserService {
   }
 
   async createUser(userData: CreateUser) {
-    const existingUser = await this.prisma.user.findFirst({
-      where: {
-        login: userData.login,
-      },
-    });
-    if (existingUser) {
-      throw new ConflictException('User already exists');
-    }
     const data = convertUserDataToUser(userData);
-    return this.prisma.user.create({
+    await this.prisma.user.create({
       data: data,
     });
+    const result = toUserDto(data);
+    return result;
   }
 
   async getUserDto(id: string): Promise<UserDto | undefined> {
@@ -49,12 +43,14 @@ export class UserService {
 
   async updateUserPassword(id: string, userData: UpdatePassword) {
     const user = checkExists(await this.getUser(id), 'User not found');
+    console.log('Update user get', user)
     if (user.password !== userData.oldPassword) {
       throwForbidden('Wrong password');
     }
     user.password = userData.newPassword;
     user.updatedAt = new Date();
-    return this.updateUser(user);
+    const result = this.updateUser(user);
+    return result;
   }
 
   async deleteUser(id: string) {
@@ -66,18 +62,24 @@ export class UserService {
     });
   }
 
-  updateUser(user: User): UserDto {
+  async updateUser(user: User) {
     user.version++;
     const result = {
       ...user,
     };
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: user,
+    });
     return toUserDto(result);
   }
 }
 
 function convertUserDataToUser(userData: CreateUser) {
   const id = uuidv4();
-  const version = 0;
+  const version = 1;
   const createdAt = new Date();
   const result: User = {
     id: id,
@@ -91,7 +93,12 @@ function convertUserDataToUser(userData: CreateUser) {
 }
 
 function toUserDto(user: User): UserDto {
-  const result = { ...user };
-  delete (result as any).password;
-  return result;
+  const userDto: UserDto = {
+    id: user.id,
+    login: user.login,
+    version: user.version,
+    createdAt: user.createdAt.valueOf(),
+    updatedAt: user.updatedAt.valueOf(),
+  };
+  return userDto;
 }

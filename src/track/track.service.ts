@@ -62,14 +62,32 @@ export class TrackService {
   }
 
   async updateTracksAfterArtistDeleted(id: string) {
-    const track = checkExists(await this.getTrack(id), 'Track not found');
-    track.artistId = null;
-    return track;
+    const tracks = (await this.getAllTracks()).filter(
+      (el) => el.artistId === id,
+    );
+    for (const track of tracks) {
+      track.artistId = null;
+      await this.prisma.track.update({
+        where: {
+          id: track.id,
+        },
+        data: track,
+      });
+    }
   }
 
   async updateTracksAfterAlbumDeleted(id: string) {
-    const track = checkExists(await this.getTrack(id), 'Track not found');
-    track.albumId = null;
-    return track;
+    const tracks = (await this.getAllTracks()).filter(
+      (el) => el.albumId === id,
+    );
+    for (const track of tracks) {
+      track.albumId = null;
+      await this.prisma.track.update({
+        where: {
+          id: track.id,
+        },
+        data: track,
+      });
+    }
   }
 }

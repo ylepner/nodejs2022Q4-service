@@ -8,7 +8,13 @@ export interface User {
   updatedAt: Date; // timestamp of last update
 }
 
-export type UserDto = Omit<User, 'password'>;
+export interface UserDto {
+  id: string;
+  login: string;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+}
 
 export const createUserSchema = z.object({
   login: z.string(),

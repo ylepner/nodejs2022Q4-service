@@ -58,7 +58,7 @@ export class ArtistService {
     checkExists(await this.getArtist(id), 'Track not found');
     this.trackService.updateTracksAfterArtistDeleted(id);
     this.albumService.updateAlbumsAfterArtistDeleted(id);
-    return this.prisma.artist.delete({
+    await this.prisma.artist.delete({
       where: {
         id,
       },
