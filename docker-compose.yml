@@ -14,3 +14,12 @@ services:
     restart: always
     ports:
       - 8080:8080
+  api:
+    build:
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DB_ADDRESS=postgresql://postgres:example@db:5432/database
+    ports:
+      - 4000:4000
