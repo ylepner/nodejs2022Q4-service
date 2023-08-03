@@ -25,8 +25,8 @@ export class TrackController {
   constructor(private trackService: TrackService) { }
 
   @Get()
-  findAll() {
-    return this.trackService.getAllTracks();
+  async findAll() {
+    return await this.trackService.getAllTracks();
   }
 
   @Get(':id')

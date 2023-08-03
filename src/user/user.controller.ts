@@ -23,6 +23,11 @@ class UpdatePasswordDto extends createZodDto(updatePasswordSchema) { }
 export class UserController {
   constructor(private userService: UserService) { }
 
+  @Get()
+  async findAll() {
+    return await this.userService.getAllUsers();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<UserDto> {
     checkId(id);
@@ -31,11 +36,6 @@ export class UserController {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return result;
-  }
-
-  @Get()
-  findAll() {
-    return this.userService.getAllUsers();
   }
 
   @Post()

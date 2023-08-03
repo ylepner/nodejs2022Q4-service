@@ -4,21 +4,28 @@ import { v4 as uuidv4 } from 'uuid';
 import { checkExists } from 'src/utils';
 import { TrackService } from 'src/track/track.service';
 import { AlbumService } from 'src/album/album.service';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class ArtistService {
+  private prisma: PrismaClient;
   constructor(
     private trackService: TrackService,
     private albumService: AlbumService,
-  ) { }
-  private artists: Artist[] = [];
+  ) {
+    this.prisma = new PrismaClient();
+  }
 
   getAllArtists(): Promise<Artist[]> {
-    return Promise.resolve(this.artists);
+    return this.prisma.artist.findMany();
   }
 
   getArtist(id: string) {
-    return Promise.resolve(this.artists.find((el) => el.id === id));
+    return this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   createArtist(artistData: Omit<Artist, 'id'>) {
@@ -27,8 +34,9 @@ export class ArtistService {
       ...artistData,
       id: uuid,
     };
-    this.artists.push(artist);
-    return Promise.resolve(artist);
+    return this.prisma.artist.create({
+      data: artist,
+    });
   }
 
   async updateArtist(id: string, artistData: UpdateArtistRequest) {
@@ -38,15 +46,22 @@ export class ArtistService {
       name: artistData.name,
       grammy: artistData.grammy,
     };
-    const index = this.artists.findIndex((el) => el.id === id);
-    this.artists[index] = artist;
-    return artist;
+    return this.prisma.artist.update({
+      where: {
+        id,
+      },
+      data: artist,
+    });
   }
 
   async deleteArtist(id: string) {
     checkExists(await this.getArtist(id), 'Track not found');
-    //this.trackService.updateTracksAfterArtistDeleted(id);
-    //this.albumService.updateAlbumsAfterArtistDeleted(id);
-    this.artists = this.artists.filter((el) => el.id !== id);
+    this.trackService.updateTracksAfterArtistDeleted(id);
+    this.albumService.updateAlbumsAfterArtistDeleted(id);
+    return this.prisma.artist.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
