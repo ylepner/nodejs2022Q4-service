@@ -1,14 +1,17 @@
-# Use postgres/example user/password credentials
 version: '3.1'
 
 services:
   db:
+    command: ["postgres", "-c", "log_statement=all", "-c", "logging_collector=on", "-c", "log_directory=/var/log/postgresql"]
     image: postgres
     restart: always
     ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: example
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/logs:/var/log/postgresql
   adminer:
     image: adminer
     restart: always
@@ -23,3 +26,7 @@ services:
       - DB_ADDRESS=postgresql://postgres:example@db:5432/database
     ports:
       - 4000:4000
+    restart: always
+volumes:
+  postgres_data:
+  postgres_logs:
