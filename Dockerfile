@@ -20,6 +20,7 @@ EXPOSE 4000
 ENV PORT 4000
 
 RUN npm run prisma-generate
+
 # Build the Nest.js application
 RUN npm run build
 
