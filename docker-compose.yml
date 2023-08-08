@@ -9,7 +9,7 @@ services:
     image: postgres
     restart: always
     ports:
-      - 5432:5432
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     environment:
       POSTGRES_PASSWORD: example
     volumes:
@@ -21,7 +21,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - '${ADMINER_PORT}:${ADMINER_PORT}'
     networks:
       - app_network
   api:
@@ -31,10 +31,12 @@ services:
     depends_on:
       - db
     environment:
-      - DB_ADDRESS=postgresql://postgres:example@db:5432/database
+      - DB_ADDRESS=postgresql://postgres:example@db:${POSTGRES_PORT}/database
     ports:
-      - 4000:4000
+      - '${PORT}:${PORT}'
     restart: always
+    volumes:
+      - ./dist:/app/dist 
     networks:
       - app_network
 volumes:
