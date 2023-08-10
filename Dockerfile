@@ -13,12 +13,7 @@ RUN npm install --omit=dev
 # Copy the rest of the application files to the working directory
 COPY . .
 
-# Expose the port that your Nest.js application listens on
-EXPOSE 4000
-
-# Set the PORT environment variable
-ENV PORT 4000
-
+# Run prisma
 RUN npm run prisma-generate
 
 # Build the Nest.js application
