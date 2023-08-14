@@ -3,18 +3,25 @@ import { Album, UpdateAlbumRequest } from './album.models';
 import { v4 as uuidv4 } from 'uuid';
 import { checkExists } from 'src/utils';
 import { TrackService } from 'src/track/track.service';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class AlbumService {
-  constructor(private trackService: TrackService) {}
-  private albums: Album[] = [];
+  private prisma: PrismaClient;
+  constructor(private trackService: TrackService) {
+    this.prisma = new PrismaClient();
+  }
 
   getAllAlbums(): Promise<Album[]> {
-    return Promise.resolve(this.albums);
+    return this.prisma.album.findMany();
   }
 
   getAlbum(id: string) {
-    return Promise.resolve(this.albums.find((el) => el.id === id));
+    return this.prisma.album.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   createAlbum(albumData: Omit<Album, 'id'>) {
@@ -23,8 +30,9 @@ export class AlbumService {
       ...albumData,
       id: uuid,
     };
-    this.albums.push(album);
-    return Promise.resolve(album);
+    return this.prisma.album.create({
+      data: album,
+    });
   }
 
   async updateAlbum(id: string, albumData: UpdateAlbumRequest) {
@@ -35,22 +43,36 @@ export class AlbumService {
       year: albumData.year,
       artistId: albumData.artistId,
     };
-    const index = this.albums.findIndex((el) => el.id === id);
-    this.albums[index] = album;
-    return album;
+    return this.prisma.album.update({
+      where: {
+        id,
+      },
+      data: album,
+    });
   }
 
   async deleteAlbum(id: string) {
     checkExists(await this.getAlbum(id), 'Album not found');
-    this.trackService.updateTracksAfterAlbumDeleted(id);
-    this.albums = this.albums.filter((el) => el.id !== id);
+    await this.trackService.updateTracksAfterAlbumDeleted(id);
+    await this.prisma.album.delete({
+      where: {
+        id,
+      },
+    });
   }
 
-  updateAlbumsAfterArtistDeleted(id: string) {
-    this.albums.forEach((el) => {
-      if (el.artistId === id) {
-        el.artistId = null;
-      }
-    });
+  async updateAlbumsAfterArtistDeleted(id: string) {
+    const albums = (await this.getAllAlbums()).filter(
+      (el) => el.artistId === id,
+    );
+    for (const album of albums) {
+      album.artistId = null;
+      await this.prisma.album.update({
+        where: {
+          id: album.id,
+        },
+        data: album,
+      });
+    }
   }
 }

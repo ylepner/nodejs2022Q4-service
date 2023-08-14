@@ -25,8 +25,8 @@ export class ArtistController {
   constructor(private artistService: ArtistService) {}
 
   @Get()
-  findAll() {
-    return this.artistService.getAllArtists();
+  async findAll() {
+    return await this.artistService.getAllArtists();
   }
 
   @Get(':id')

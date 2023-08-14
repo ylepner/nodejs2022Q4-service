@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    command: ["postgres", "-c", "log_statement=all", "-c", "logging_collector=on", "-c", "log_directory=/var/log/postgresql"]
+    image: postgres
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRESS_PASSWORD}
+      - PGPORT=${POSTGRES_PORT}
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/logs:/var/log/postgresql
+    networks:
+      - app_network
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - ${ADMINER_PORT}:8080
+    networks:
+      - app_network
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DB_ADDRESS=${DB_ADDRESS}
+    ports:
+      - ${PORT}:4000
+    restart: always
+    volumes:
+      - ./dist:/app/dist 
+      - ./src:/usr/src/app/src
+    command: npm run start:dev
+    networks:
+      - app_network
+volumes:
+  postgres_data:
+  postgres_logs:
+networks:
+  app_network:
+    driver: bridge
