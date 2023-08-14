@@ -20,12 +20,6 @@ git clone -b develop https://github.com/ylepner/nodejs2023Q2-service.git
 npm install
 ```
 
-## Running application
-
-```
-npm run start
-```
-or 
 ## Running docker containers
 
 ```
@@ -71,6 +65,12 @@ docker network ls
 
 ```
 docker network inspect nodejs2023q2-service_app_network
+```
+
+## Check volumes
+
+```
+docker volume ls
 ```
 
 ## Auto-fix and format
