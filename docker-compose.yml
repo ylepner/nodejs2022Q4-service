@@ -12,6 +12,7 @@ services:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       - POSTGRES_PASSWORD=${POSTGRESS_PASSWORD}
+      - PGPORT=${POSTGRES_PORT}
     volumes:
       - ./db/data:/var/lib/postgresql/data
       - ./db/logs:/var/log/postgresql
