@@ -11,7 +11,7 @@ Let's try to create a Home Library Service! Users can create, read, update, dele
 ## Downloading
 
 ```
-git clone -b develop https://github.com/ylepner/nodejs2023Q2-service.git
+git clone -b part-2 https://github.com/ylepner/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
