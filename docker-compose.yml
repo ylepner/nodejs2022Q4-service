@@ -9,7 +9,7 @@ services:
     image: postgres
     restart: always
     ports:
-      - ${POSTGRES_PORT}:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       - POSTGRES_PASSWORD=${POSTGRESS_PASSWORD}
     volumes:
@@ -21,7 +21,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - ${ADMINER_PORT}:8080
+      - ${ADMINER_PORT}:${ADMINER_PORT}
     networks:
       - app_network
   api:
