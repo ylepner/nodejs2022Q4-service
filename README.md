@@ -11,7 +11,7 @@ Let's try to create a Home Library Service! Users can create, read, update, dele
 ## Downloading
 
 ```
-git clone -b develop https://github.com/ylepner/nodejs2023Q2-service.git
+git clone -b part-2 https://github.com/ylepner/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
@@ -20,12 +20,6 @@ git clone -b develop https://github.com/ylepner/nodejs2023Q2-service.git
 npm install
 ```
 
-## Running application
-
-```
-npm run start
-```
-or 
 ## Running docker containers
 
 ```
@@ -71,6 +65,12 @@ docker network ls
 
 ```
 docker network inspect nodejs2023q2-service_app_network
+```
+
+## Check volumes
+
+```
+docker volume ls
 ```
 
 ## Auto-fix and format
