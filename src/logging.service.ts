@@ -15,13 +15,17 @@ export class LoggingService {
   log(logType: 'info' | 'warning' | 'error', data: ReqData) {
     const logLevel = errorMap[logType];
     if (logLevel < this.logLevel) return;
-    console.log(data);
+    console.log(logType, data);
+  }
+
+  logError(data: ReqData) {
+    this.log('error', data);
   }
 }
 
 export interface ReqData {
   url: string;
-  queryParams: { [key: string]: string } | undefined;
+  queryParams: any;
   body: string;
   responseStatusCode: number;
 }
