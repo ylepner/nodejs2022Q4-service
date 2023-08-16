@@ -26,6 +26,8 @@ services:
     networks:
       - app_network
   api:
+    env_file:
+      - docker.env
     build:
       context: .
       dockerfile: ./Dockerfile
