@@ -13,6 +13,8 @@ import { FavoritesService } from './favorites/favorites.service';
 import { FavoritesController } from './favorites/favorites.controller';
 import { LoggerMiddleware } from './logger.middleware';
 import { LoggingService } from './logging.service';
+import { HttpExceptionFilter } from './http-exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 @Module({
   imports: [],
   controllers: [
@@ -31,12 +33,14 @@ import { LoggingService } from './logging.service';
     AlbumService,
     FavoritesService,
     LoggingService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
