@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
@@ -11,6 +11,7 @@ import { AlbumController } from './album/album.controller';
 import { AlbumService } from './album/album.service';
 import { FavoritesService } from './favorites/favorites.service';
 import { FavoritesController } from './favorites/favorites.controller';
+import { LoggerMiddleware } from './logger.middleware';
 @Module({
   imports: [],
   controllers: [
@@ -30,4 +31,8 @@ import { FavoritesController } from './favorites/favorites.controller';
     FavoritesService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware);
+  }
+}
