@@ -12,6 +12,7 @@ import { AlbumService } from './album/album.service';
 import { FavoritesService } from './favorites/favorites.service';
 import { FavoritesController } from './favorites/favorites.controller';
 import { LoggerMiddleware } from './logger.middleware';
+import { LoggingService } from './logging.service';
 @Module({
   imports: [],
   controllers: [
@@ -29,10 +30,13 @@ import { LoggerMiddleware } from './logger.middleware';
     ArtistService,
     AlbumService,
     FavoritesService,
+    LoggingService,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware);
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('*');
   }
 }
