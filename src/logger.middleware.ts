@@ -6,15 +6,23 @@ import { LoggingService } from './logging.service';
 export class LoggerMiddleware implements NestMiddleware {
   constructor(private logger: LoggingService) { }
 
-  use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, res: Response, next: NextFunction) {
     console.log('Request...');
-    res.on('finish', () => {
-      this.logger.log('info', {
-        url: req.baseUrl,
+    res.on('finish', async () => {
+      const data = {
+        url: req.url,
         queryParams: req.params,
         body: req.body,
         responseStatusCode: res.statusCode,
-      });
+        message: res.statusMessage,
+      };
+      if (res.statusCode >= 500) {
+        await this.logger.toLog('error', data);
+      } else if (res.statusCode >= 400 && res.statusCode < 500) {
+        await this.logger.toLog('warning', data);
+      } else {
+        await this.logger.toLog('info', data);
+      }
     });
     next();
   }
