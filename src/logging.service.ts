@@ -8,7 +8,6 @@ enum errorMap {
 
 @Injectable()
 export class LoggingService extends Logger {
-
   logLevel = 0;
 
   async toLog(logType: 'info' | 'warning' | 'error', data: ReqData) {
@@ -20,14 +19,22 @@ export class LoggingService extends Logger {
       )}, body: ${JSON.stringify(data.body)} [Response] status code: ${data.responseStatusCode
       }, message: ${data.message}`;
     if (logType === 'info') {
-      await this.info(dataToLog);
+      this.info(dataToLog);
     }
     if (logType === 'warning') {
-      await this.warn(dataToLog);
+      this.warn(dataToLog);
     }
     if (logType === 'error') {
-      await this.error(dataToLog);
+      this.error(dataToLog);
     }
+  }
+
+  async logUncaughtException() {
+    this.error('Uncaught Exception');
+  }
+
+  async logUnhandledRejection() {
+    this.error('Unhandled Rejection');
   }
 
   warn(message: any) {
