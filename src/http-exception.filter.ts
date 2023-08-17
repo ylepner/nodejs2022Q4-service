@@ -7,26 +7,30 @@ import {
 import { Request, Response } from 'express';
 import { LoggingService, ReqData } from './logging.service';
 
-@Catch(HttpException)
+@Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly loggingService: LoggingService) { }
-  catch(exception: HttpException, host: ArgumentsHost) {
+
+  async catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+
     const status =
       exception instanceof HttpException ? exception.getStatus() : 500;
 
-    const message = exception.message || 'Internal server error';
+    const message =
+      exception instanceof HttpException
+        ? exception.message
+        : 'Internal server error';
 
     const logData: ReqData = {
       url: request.url,
       queryParams: request.query,
-      body: JSON.stringify(request.body),
+      body: request.body,
       responseStatusCode: status,
+      message: message,
     };
-
-    this.loggingService.logError(logData);
 
     response.status(status).json({
       statusCode: status,

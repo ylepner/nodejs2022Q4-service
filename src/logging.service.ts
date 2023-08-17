@@ -30,16 +30,16 @@ export class LoggingService extends Logger {
     }
   }
 
-  warn(message: any, context?: string) {
-    super.warn(this.simplifyLogMessage(message), context);
+  warn(message: any) {
+    super.warn(this.simplifyLogMessage(message));
   }
 
-  error(message: any, trace?: string, context?: string) {
-    super.error(this.simplifyLogMessage(message), trace, context);
+  error(message: any) {
+    super.error(this.simplifyLogMessage(message));
   }
 
-  info(message: any, context?: string) {
-    super.log(this.simplifyLogMessage(message), context);
+  info(message: any) {
+    super.log(this.simplifyLogMessage(message));
   }
 
   simplifyLogMessage(message: any): string {
