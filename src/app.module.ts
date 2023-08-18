@@ -16,15 +16,14 @@ import { LoggingService } from './logging.service';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { APP_FILTER } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './auth/auth/constants';
 import { AuthController } from './auth/auth/auth.controller';
 import { AuthService } from './auth/auth/auth.service';
 @Module({
   imports: [
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: '6000s' },
     }),
   ],
   controllers: [
