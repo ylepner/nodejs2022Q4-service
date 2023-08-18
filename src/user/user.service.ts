@@ -24,6 +24,14 @@ export class UserService {
     });
   }
 
+  getUserByLogin(login: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        login,
+      },
+    });
+  }
+
   async createUser(userData: CreateUser) {
     const data = convertUserDataToUser(userData);
     await this.prisma.user.create({
