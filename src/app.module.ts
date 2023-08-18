@@ -15,8 +15,18 @@ import { LoggerMiddleware } from './logger.middleware';
 import { LoggingService } from './logging.service';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { APP_FILTER } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './auth/auth/constants';
+import { AuthController } from './auth/auth/auth.controller';
+import { AuthService } from './auth/auth/auth.service';
 @Module({
-  imports: [],
+  imports: [
+    JwtModule.register({
+      global: true,
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '60s' },
+    }),
+  ],
   controllers: [
     AppController,
     UserController,
@@ -24,6 +34,7 @@ import { APP_FILTER } from '@nestjs/core';
     ArtistController,
     AlbumController,
     FavoritesController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -32,6 +43,7 @@ import { APP_FILTER } from '@nestjs/core';
     ArtistService,
     AlbumService,
     FavoritesService,
+    AuthService,
     LoggingService,
     Logger,
     {
