@@ -9,20 +9,23 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { Track, createTrackSchema } from './track.models';
 import { checkId } from 'src/utils';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
+import { AuthGuard } from 'src/auth/auth/auth.quard';
 
-class CreateTrackDto extends createZodDto(createTrackSchema) {}
-class UpdateTrackDto extends createZodDto(createTrackSchema) {}
+class CreateTrackDto extends createZodDto(createTrackSchema) { }
+class UpdateTrackDto extends createZodDto(createTrackSchema) { }
 
 @UsePipes(ZodValidationPipe)
 @Controller('track')
+@UseGuards(AuthGuard)
 export class TrackController {
-  constructor(private trackService: TrackService) {}
+  constructor(private trackService: TrackService) { }
 
   @Get()
   async findAll() {
