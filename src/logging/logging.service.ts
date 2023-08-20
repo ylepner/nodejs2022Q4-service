@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { writeToFile } from './utils';
 
 enum errorMap {
   info = 0,
@@ -37,15 +38,18 @@ export class LoggingService extends Logger {
     this.error('Unhandled Rejection');
   }
 
-  warn(message: any) {
+  async warn(message: any) {
+    await writeToFile(message, 'warn');
     super.warn(this.simplifyLogMessage(message));
   }
 
-  error(message: any) {
+  async error(message: any) {
+    await writeToFile(message, 'error');
     super.error(this.simplifyLogMessage(message));
   }
 
-  info(message: any) {
+  async info(message: any) {
+    await writeToFile(message, 'info');
     super.log(this.simplifyLogMessage(message));
   }
 
