@@ -3,7 +3,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { load } from 'js-yaml';
 import { readFile } from 'fs/promises';
-import { LoggingService } from './logging.service';
+import { LoggingService } from './logging/logging.service';
 
 const PORT = process.env.PORT || 4000;
 

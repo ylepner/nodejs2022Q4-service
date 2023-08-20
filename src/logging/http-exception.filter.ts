@@ -5,11 +5,11 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { LoggingService, ReqData } from './logging.service';
+import { LoggingService } from './logging.service';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  constructor(private readonly loggingService: LoggingService) { }
+  constructor(private readonly loggingService: LoggingService) {}
 
   async catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -23,14 +23,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.message
         : 'Internal server error';
-
-    const logData: ReqData = {
-      url: request.url,
-      queryParams: request.query,
-      body: request.body,
-      responseStatusCode: status,
-      message: message,
-    };
 
     response.status(status).json({
       statusCode: status,

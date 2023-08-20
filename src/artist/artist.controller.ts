@@ -18,14 +18,14 @@ import { checkId } from 'src/utils';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
 import { AuthGuard } from 'src/auth/auth/auth.quard';
 
-class CreateArtistDto extends createZodDto(createArtistSchema) { }
-class UpdateArtistDto extends createZodDto(createArtistSchema) { }
+class CreateArtistDto extends createZodDto(createArtistSchema) {}
+class UpdateArtistDto extends createZodDto(createArtistSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('artist')
 @UseGuards(AuthGuard)
 export class ArtistController {
-  constructor(private artistService: ArtistService) { }
+  constructor(private artistService: ArtistService) {}
 
   @Get()
   async findAll() {

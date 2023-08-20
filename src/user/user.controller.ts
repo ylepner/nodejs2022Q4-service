@@ -17,14 +17,14 @@ import { createUserSchema, updatePasswordSchema, UserDto } from './user.models';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
 import { checkId } from 'src/utils';
 import { AuthGuard } from 'src/auth/auth/auth.quard';
-class CreateUserDto extends createZodDto(createUserSchema) { }
-class UpdatePasswordDto extends createZodDto(updatePasswordSchema) { }
+class CreateUserDto extends createZodDto(createUserSchema) {}
+class UpdatePasswordDto extends createZodDto(updatePasswordSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('user')
 @UseGuards(AuthGuard)
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @Get()
   async findAll() {

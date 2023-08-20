@@ -18,14 +18,14 @@ import { checkId } from 'src/utils';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
 import { AuthGuard } from 'src/auth/auth/auth.quard';
 
-class CreateTrackDto extends createZodDto(createTrackSchema) { }
-class UpdateTrackDto extends createZodDto(createTrackSchema) { }
+class CreateTrackDto extends createZodDto(createTrackSchema) {}
+class UpdateTrackDto extends createZodDto(createTrackSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('track')
 @UseGuards(AuthGuard)
 export class TrackController {
-  constructor(private trackService: TrackService) { }
+  constructor(private trackService: TrackService) {}
 
   @Get()
   async findAll() {

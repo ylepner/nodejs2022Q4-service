@@ -7,5 +7,3 @@ export const singInSchema = z.object({
 
 export type SignIn = z.infer<typeof singInSchema>;
 export type SignUp = z.infer<typeof singInSchema>;
-
-

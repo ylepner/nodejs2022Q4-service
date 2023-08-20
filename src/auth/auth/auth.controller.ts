@@ -11,13 +11,13 @@ import { singInSchema } from './auth.models';
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod';
 import { createUserSchema } from 'src/user/user.models';
 
-class SignInDto extends createZodDto(singInSchema) { }
-class CreateUserDto extends createZodDto(createUserSchema) { }
+class SignInDto extends createZodDto(singInSchema) {}
+class CreateUserDto extends createZodDto(createUserSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')

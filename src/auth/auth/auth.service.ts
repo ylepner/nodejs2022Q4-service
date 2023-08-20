@@ -9,7 +9,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signIn(data: SignIn) {
     const user = await this.userService.getUserByLogin(data.login);

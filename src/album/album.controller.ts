@@ -18,14 +18,14 @@ import { checkId } from 'src/utils';
 import { Album, createAlbumSchema } from './album.models';
 import { AuthGuard } from 'src/auth/auth/auth.quard';
 
-class CreateAlbumDto extends createZodDto(createAlbumSchema) { }
-class UpdateAlbumDto extends createZodDto(createAlbumSchema) { }
+class CreateAlbumDto extends createZodDto(createAlbumSchema) {}
+class UpdateAlbumDto extends createZodDto(createAlbumSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('album')
 @UseGuards(AuthGuard)
 export class AlbumController {
-  constructor(private albumService: AlbumService) { }
+  constructor(private albumService: AlbumService) {}
 
   @Get()
   findAll() {
