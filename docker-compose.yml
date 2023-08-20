@@ -5,17 +5,12 @@ services:
     build:
       context: ./database
       dockerfile: Dockerfile
-    command: ["postgres", "-c", "log_statement=all", "-c", "logging_collector=on", "-c", "log_directory=/var/log/postgresql"]
     image: postgres
-    restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       - POSTGRES_PASSWORD=${POSTGRESS_PASSWORD}
       - PGPORT=${POSTGRES_PORT}
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-      - ./db/logs:/var/log/postgresql
     networks:
       - app_network
   adminer:
