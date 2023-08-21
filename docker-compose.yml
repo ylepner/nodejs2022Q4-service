@@ -33,6 +33,8 @@ services:
     ports:
       - ${PORT}:4000
     restart: always
+    volumes:
+      - ./docker-api-logs:/usr/src/app/logs
     networks:
       - app_network
 volumes:
