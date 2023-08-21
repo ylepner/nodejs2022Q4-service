@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    image: postgres
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRESS_PASSWORD}
+      - PGPORT=${POSTGRES_PORT}
+    networks:
+      - app_network
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - ${ADMINER_PORT}:${ADMINER_PORT}
+    networks:
+      - app_network
+  api:
+    env_file:
+      - docker.env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DB_ADDRESS=${DB_ADDRESS}
+    ports:
+      - ${PORT}:4000
+    restart: always
+    volumes:
+      - ./docker-api-logs:/usr/src/app/logs
+    networks:
+      - app_network
+volumes:
+  postgres_data:
+  postgres_logs:
+networks:
+  app_network:
+    driver: bridge

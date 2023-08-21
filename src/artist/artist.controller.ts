@@ -9,24 +9,27 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { Artist, createArtistSchema } from './artist.models';
 import { checkId } from 'src/utils';
 import { ZodValidationPipe, createZodDto } from 'nestjs-zod';
+import { AuthGuard } from 'src/auth/auth/auth.quard';
 
 class CreateArtistDto extends createZodDto(createArtistSchema) {}
 class UpdateArtistDto extends createZodDto(createArtistSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('artist')
+@UseGuards(AuthGuard)
 export class ArtistController {
   constructor(private artistService: ArtistService) {}
 
   @Get()
-  findAll() {
-    return this.artistService.getAllArtists();
+  async findAll() {
+    return await this.artistService.getAllArtists();
   }
 
   @Get(':id')

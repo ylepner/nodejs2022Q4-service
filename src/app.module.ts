@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
@@ -11,10 +11,19 @@ import { AlbumController } from './album/album.controller';
 import { AlbumService } from './album/album.service';
 import { FavoritesService } from './favorites/favorites.service';
 import { FavoritesController } from './favorites/favorites.controller';
-import { ArtisnpmService } from './run/artisnpm/artisnpm.service';
-
+import { LoggerMiddleware } from './logging/logger.middleware';
+import { LoggingService } from './logging/logging.service';
+import { HttpExceptionFilter } from './logging/http-exception.filter';
+import { APP_FILTER } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthController } from './auth/auth/auth.controller';
+import { AuthService } from './auth/auth/auth.service';
 @Module({
-  imports: [],
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+    }),
+  ],
   controllers: [
     AppController,
     UserController,
@@ -22,6 +31,7 @@ import { ArtisnpmService } from './run/artisnpm/artisnpm.service';
     ArtistController,
     AlbumController,
     FavoritesController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -30,7 +40,17 @@ import { ArtisnpmService } from './run/artisnpm/artisnpm.service';
     ArtistService,
     AlbumService,
     FavoritesService,
-    ArtisnpmService,
+    AuthService,
+    LoggingService,
+    Logger,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

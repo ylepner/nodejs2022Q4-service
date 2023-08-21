@@ -1,18 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUser, UpdatePassword, User, UserDto } from './user.models';
 import { v4 as uuidv4 } from 'uuid';
-import { checkExists, throwConflict, throwForbidden } from 'src/utils';
+import { checkExists, throwForbidden } from 'src/utils';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  private prisma: PrismaClient;
 
-  getAllUsers(): Promise<UserDto[]> {
-    return Promise.resolve(this.users.map((el) => toUserDto(el)));
+  constructor() {
+    this.prisma = new PrismaClient();
   }
 
-  getUser(id: string): Promise<User | undefined> {
-    return Promise.resolve(this.users.find((el) => el.id === id));
+  async getAllUsers() {
+    return (await this.prisma.user.findMany()).map((el) => toUserDto(el));
+  }
+
+  getUser(id: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  getUserByLogin(login: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        login,
+      },
+    });
+  }
+
+  async createUser(userData: CreateUser) {
+    const data = convertUserDataToUser(userData);
+    await this.prisma.user.create({
+      data: data,
+    });
+    const result = toUserDto(data);
+    return result;
   }
 
   async getUserDto(id: string): Promise<UserDto | undefined> {
@@ -23,44 +49,46 @@ export class UserService {
     return undefined;
   }
 
-
-  createUser(userData: CreateUser) {
-    if (this.users.find((el) => el.login === userData.login)) {
-      throwConflict('User already exists');
-    }
-    const user = convertUserDataToUser(userData);
-    this.users.push(user);
-    return this.updateUser(user);
-  }
-
   async updateUserPassword(id: string, userData: UpdatePassword) {
     const user = checkExists(await this.getUser(id), 'User not found');
+    console.log('Update user get', user);
     if (user.password !== userData.oldPassword) {
       throwForbidden('Wrong password');
     }
     user.password = userData.newPassword;
-    user.updatedAt = new Date().valueOf();
-    return this.updateUser(user);
+    user.updatedAt = new Date();
+    const result = this.updateUser(user);
+    return result;
   }
 
   async deleteUser(id: string) {
-    const user = checkExists(await this.getUser(id), 'User not found');
-    this.users = this.users.filter((el) => el.id !== user.id);
+    checkExists(await this.getUser(id), 'User not found');
+    await this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
   }
 
-  updateUser(user: User): UserDto {
+  async updateUser(user: User) {
     user.version++;
     const result = {
       ...user,
     };
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: user,
+    });
     return toUserDto(result);
   }
 }
 
 function convertUserDataToUser(userData: CreateUser) {
   const id = uuidv4();
-  const version = 0;
-  const createdAt = new Date().valueOf();
+  const version = 1;
+  const createdAt = new Date();
   const result: User = {
     id: id,
     login: userData.login,
@@ -73,7 +101,12 @@ function convertUserDataToUser(userData: CreateUser) {
 }
 
 function toUserDto(user: User): UserDto {
-  const result = { ...user };
-  delete (result as any).password;
-  return result;
+  const userDto: UserDto = {
+    id: user.id,
+    login: user.login,
+    version: user.version,
+    createdAt: user.createdAt.valueOf(),
+    updatedAt: user.updatedAt.valueOf(),
+  };
+  return userDto;
 }
