@@ -11,7 +11,7 @@ Let's try to create a Home Library Service! Users can create, read, update, dele
 ## Downloading
 
 ```
-git clone -b part-2 https://github.com/ylepner/nodejs2023Q2-service.git
+git clone -b part-3 https://github.com/ylepner/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
@@ -35,42 +35,7 @@ After application running open new terminal and enter:
 To run all tests without authorization
 
 ```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
-## Scan image vulnerabilities
-
-```
-npm run docker:scan
-```
-## Pull docker image from docker hub
-
-```
-docker pull lepy/nodejs2023q2-service-api:latest
-```
-```
-docker run -d --name my-container -p 4000:4000 lepy/nodejs2023q2-service-api:latest
-```
-## Check user-defined bridge
-
-```
-docker network ls
-```
-
-```
-docker network inspect nodejs2023q2-service_app_network
-```
-
-## Check volumes
-
-```
-docker volume ls
+npm run test:auth
 ```
 
 ## Auto-fix and format
