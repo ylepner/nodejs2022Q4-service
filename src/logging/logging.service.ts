@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { writeToFile } from './utils';
+import { writeToErrorFile, writeToFile } from './utils';
 
 enum errorMap {
   info = 0,
@@ -14,11 +14,13 @@ export class LoggingService extends Logger {
   async toLog(logType: 'info' | 'warning' | 'error', data: ReqData) {
     const logLevel = errorMap[logType];
     if (logLevel < this.logLevel) return;
-    const dataToLog = `[Request] url: ${data.url
-      }, query parameters: ${JSON.stringify(
-        data.queryParams,
-      )}, body: ${JSON.stringify(data.body)} [Response] status code: ${data.responseStatusCode
-      }, message: ${data.message}`;
+    const dataToLog = `[Request] url: ${
+      data.url
+    }, query parameters: ${JSON.stringify(
+      data.queryParams,
+    )}, body: ${JSON.stringify(data.body)} [Response] status code: ${
+      data.responseStatusCode
+    }, message: ${data.message}`;
     if (logType === 'info') {
       this.info(dataToLog);
     }
@@ -39,17 +41,17 @@ export class LoggingService extends Logger {
   }
 
   async warn(message: any) {
-    await writeToFile(message, 'warn');
+    await writeToFile(message);
     super.warn(this.simplifyLogMessage(message));
   }
 
   async error(message: any) {
-    await writeToFile(message, 'error');
+    await writeToErrorFile(message);
     super.error(this.simplifyLogMessage(message));
   }
 
   async info(message: any) {
-    await writeToFile(message, 'info');
+    await writeToFile(message);
     super.log(this.simplifyLogMessage(message));
   }
 
