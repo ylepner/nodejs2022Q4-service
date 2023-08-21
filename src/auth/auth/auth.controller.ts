@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
-  HttpStatus,
+  Request,
   Post,
   UsePipes,
 } from '@nestjs/common';
@@ -11,23 +11,29 @@ import { singInSchema } from './auth.models';
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod';
 import { createUserSchema } from 'src/user/user.models';
 
-class SignInDto extends createZodDto(singInSchema) {}
-class CreateUserDto extends createZodDto(createUserSchema) {}
+class SignInDto extends createZodDto(singInSchema) { }
+class CreateUserDto extends createZodDto(createUserSchema) { }
 
 @UsePipes(ZodValidationPipe)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(200)
   @Post('login')
   signIn(@Body() data: SignInDto) {
     return this.authService.signIn(data);
   }
 
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(200)
   @Post('signup')
   signUp(@Body() data: CreateUserDto) {
     return this.authService.signUp(data);
+  }
+
+  @Post('refresh')
+  @HttpCode(200)
+  refresh(@Body() token: string) {
+    return this.authService.refresh(token);
   }
 }
