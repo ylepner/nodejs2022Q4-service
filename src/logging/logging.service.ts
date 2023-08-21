@@ -4,7 +4,7 @@ import { ReqData, logsMap } from './logging.models';
 
 @Injectable()
 export class LoggingService extends Logger {
-  logLevelEnv = Number(process.env.LOG_LEVEL) || 1;
+  readonly logLevelEnv = Number(process.env.API_LOG_LEVEL) || 1;
 
   async toLog(
     logType: 'error' | 'warn' | 'log' | 'verboose' | 'debug',

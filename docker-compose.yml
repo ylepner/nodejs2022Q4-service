@@ -33,10 +33,6 @@ services:
     ports:
       - ${PORT}:4000
     restart: always
-    volumes:
-      - ./dist:/app/dist 
-      - ./src:/usr/src/app/src
-    command: npm run start:dev
     networks:
       - app_network
 volumes:
