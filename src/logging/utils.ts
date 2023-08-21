@@ -1,6 +1,9 @@
 import { join } from 'path';
 import { appendFile, mkdir } from 'fs/promises';
 
+const sizeLimitInBytes = (Number(process.env.LOG_SIZE_KB) || 10) * 1024;
+let currentFileSizeInBytes = 0;
+
 let checked = false;
 const logFileName = getLogName();
 export async function writeToFile(message: string, type: string) {
@@ -17,16 +20,34 @@ export async function writeToFile(message: string, type: string) {
     }
     checked = true;
   }
-  let path;
-  type === 'error'
-    ? (path = join(folder, `errors-${logFileName}`))
-    : (path = join(folder, logFileName));
+
+  const messageSize = Buffer.from(message + '\n').length;
+  if (currentFileSizeInBytes + messageSize <= sizeLimitInBytes) {
+    currentFileSizeInBytes += messageSize;
+  } else {
+    // logFileName = getLogName();
+    currentFileSizeInBytes = 0;
+  }
+  const path =
+    type === 'error'
+      ? join(folder, `errors-${logFileName}`)
+      : join(folder, logFileName);
+
   try {
     await appendFile(path, message + '\n');
   } catch (err) {
     console.log('Error appending to file:', err);
   }
 }
+
+// async function checkSize(path: string) {
+//   try {
+//     const fileStat = await stat(path);
+//     return fileStat.size;
+//   } catch {
+//     return null;
+//   }
+// }
 
 function getLogName() {
   const currentDate = new Date();
