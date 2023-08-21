@@ -1,9 +1,5 @@
 import { join } from 'path';
-import { appendFile, stat, mkdir } from 'fs/promises';
-
-const sizeLimitInBytes = (Number(process.env.LOG_SIZE_KB) || 10) * 1024;
-let count = 0;
-let currentFileSizeInBytes = 0;
+import { appendFile, mkdir } from 'fs/promises';
 
 let checked = false;
 const logFileName = getLogName();
@@ -11,7 +7,7 @@ export async function writeToFile(message: string, type: string) {
   const folder = join(process.cwd(), 'logs');
   if (!checked) {
     try {
-      console.log(`Creating folder ${folder}`)
+      console.log(`Creating folder ${folder}`);
       await mkdir(folder, {
         recursive: true,
       });
@@ -19,33 +15,16 @@ export async function writeToFile(message: string, type: string) {
       console.error(`Cannot create folder ${folder}`);
       console.error(e);
     }
-
     checked = true;
   }
   let path;
-  type === 'error' ? path = join(folder, `errors-${logFileName}`) : path = join(folder, logFileName);
-  // const size = await checkSize(path);
-  // if (size) {
-  //   if (currentFileSizeInBytes + size <= sizeLimitInBytes) {
-  //     currentFileSizeInBytes += size;
-  //   } else {
-  //     count += 1;
-  //     currentFileSizeInBytes = size;
-  //   }
-  // }
+  type === 'error'
+    ? (path = join(folder, `errors-${logFileName}`))
+    : (path = join(folder, logFileName));
   try {
     await appendFile(path, message + '\n');
   } catch (err) {
     console.log('Error appending to file:', err);
-  }
-}
-
-async function checkSize(path: string) {
-  try {
-    const fileStat = await stat(path);
-    return fileStat.size;
-  } catch {
-    return null;
   }
 }
 

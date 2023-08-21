@@ -6,7 +6,6 @@ export interface ReqData {
   message: string | 'Message?';
 }
 
-
 export enum logsMap {
   error = 1,
   warn = 2,

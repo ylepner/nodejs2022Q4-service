@@ -12,11 +12,13 @@ export class LoggingService extends Logger {
   ) {
     const logLevel = logsMap[logType];
     if (logLevel > this.logLevelEnv) return;
-    const dataToLog = `[Request] url: ${data.url
-      }, query parameters: ${JSON.stringify(
-        data.queryParams,
-      )}, body: ${JSON.stringify(data.body)} [Response] status code: ${data.responseStatusCode
-      }, message: ${data.message}`;
+    const dataToLog = `[Request] url: ${
+      data.url
+    }, query parameters: ${JSON.stringify(
+      data.queryParams,
+    )}, body: ${JSON.stringify(data.body)} [Response] status code: ${
+      data.responseStatusCode
+    }, message: ${data.message}`;
     if (logType === 'log') {
       this.info(dataToLog);
     }
@@ -46,7 +48,7 @@ export class LoggingService extends Logger {
     super.error(this.simplifyLogMessage(message));
   }
 
-  async info(message: string,) {
+  async info(message: string) {
     await writeToFile(message, 'log');
     super.log(this.simplifyLogMessage(message));
   }

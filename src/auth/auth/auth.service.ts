@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { SignIn } from './auth.models';
@@ -18,7 +14,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signIn(data: SignIn) {
     const user = await this.userService.getUserByLogin(data.login);
@@ -43,14 +39,13 @@ export class AuthService {
     return await this.userService.createUser(data);
   }
 
-  async generateAccessToken(payload: { sub: string, username: string }) {
+  async generateAccessToken(payload: { sub: string; username: string }) {
     return await this.jwtService.signAsync(payload, {
       expiresIn: tokenExpiredTimeSec,
     });
   }
 
-  async generateRefreshToken(
-    payload: { sub: string, username: string }) {
+  async generateRefreshToken(payload: { sub: string; username: string }) {
     return await this.jwtService.signAsync(payload, {
       expiresIn: refreshTokenExpiredTimeSec,
     });
@@ -59,6 +54,7 @@ export class AuthService {
   async refresh(token: string) {
     try {
       const verify = await this.jwtService.verifyAsync(token);
+      verify;
       const payload = { sub: verify.sub, username: verify.username };
       this.generateAccessToken(payload);
     } catch (error) {

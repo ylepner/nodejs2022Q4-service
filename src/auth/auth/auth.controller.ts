@@ -1,23 +1,16 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Request,
-  Post,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { singInSchema } from './auth.models';
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod';
 import { createUserSchema } from 'src/user/user.models';
 
-class SignInDto extends createZodDto(singInSchema) { }
-class CreateUserDto extends createZodDto(createUserSchema) { }
+class SignInDto extends createZodDto(singInSchema) {}
+class CreateUserDto extends createZodDto(createUserSchema) {}
 
 @UsePipes(ZodValidationPipe)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @HttpCode(200)
   @Post('login')
@@ -31,8 +24,8 @@ export class AuthController {
     return this.authService.signUp(data);
   }
 
-  @Post('refresh')
   @HttpCode(200)
+  @Post('refresh')
   refresh(@Body() token: string) {
     return this.authService.refresh(token);
   }
