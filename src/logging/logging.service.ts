@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { writeToErrorFile, writeToFile } from './utils';
+import { writeToFile } from './utils';
 import { ReqData, logsMap } from './logging.models';
 
 @Injectable()
@@ -36,18 +36,18 @@ export class LoggingService extends Logger {
     this.error('Unhandled Rejection');
   }
 
-  async warn(message: any) {
-    await writeToFile(message);
+  async warn(message: string) {
+    await writeToFile(message, 'warn');
     super.warn(this.simplifyLogMessage(message));
   }
 
-  async error(message: any) {
-    await writeToErrorFile(message);
+  async error(message: string) {
+    await writeToFile(message, 'error');
     super.error(this.simplifyLogMessage(message));
   }
 
-  async info(message: any) {
-    await writeToFile(message);
+  async info(message: string,) {
+    await writeToFile(message, 'log');
     super.log(this.simplifyLogMessage(message));
   }
 

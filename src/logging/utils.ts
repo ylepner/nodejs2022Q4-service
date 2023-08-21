@@ -6,9 +6,8 @@ let count = 0;
 let currentFileSizeInBytes = 0;
 
 let checked = false;
-let date = new Date();
 const logFileName = getLogName();
-export async function writeToFile(message: string) {
+export async function writeToFile(message: string, type: string) {
   const folder = join(process.cwd(), 'logs');
   if (!checked) {
     try {
@@ -23,7 +22,8 @@ export async function writeToFile(message: string) {
 
     checked = true;
   }
-  const path = join(folder, logFileName);
+  let path;
+  type === 'error' ? path = join(folder, `errors-${logFileName}`) : path = join(folder, logFileName);
   // const size = await checkSize(path);
   // if (size) {
   //   if (currentFileSizeInBytes + size <= sizeLimitInBytes) {
@@ -34,20 +34,9 @@ export async function writeToFile(message: string) {
   //   }
   // }
   try {
-    // почему тот же path??
-    // почему файлы в гитигнор
     await appendFile(path, message + '\n');
   } catch (err) {
     console.log('Error appending to file:', err);
-  }
-}
-
-export async function writeToErrorFile(message: string) {
-  const path = join(process.cwd(), '', `/errors.log`);
-  try {
-    await appendFile(path, message + '\n');
-  } catch (err) {
-    console.error('Error appending to file:', err);
   }
 }
 
