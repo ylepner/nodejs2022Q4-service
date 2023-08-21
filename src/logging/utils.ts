@@ -7,21 +7,19 @@ let currentFileSizeInBytes = 0;
 
 export async function writeToFile(message: string) {
   const path = join(process.cwd(), '', `/logs(${count}).log`);
-
-  if (await ifExists(path)) {
-    const fileStat = await stat(path);
-    if (fileStat) {
-      currentFileSizeInBytes = fileStat.size;
-    }
-  }
-
-  if (currentFileSizeInBytes >= sizeLimitInBytes) {
-    count += 1;
-    currentFileSizeInBytes = 0;
-  }
+  // const size = await checkSize(path);
+  // if (size) {
+  //   if (currentFileSizeInBytes + size <= sizeLimitInBytes) {
+  //     currentFileSizeInBytes += size;
+  //   } else {
+  //     count += 1;
+  //     currentFileSizeInBytes = size;
+  //   }
+  // }
   try {
+    // почему тот же path??
+    // почему файлы в гитигнор
     await appendFile(path, message + '\n');
-    currentFileSizeInBytes += Buffer.from(message + '\n').length;
   } catch (err) {
     console.log('Error appending to file:', err);
   }
@@ -36,26 +34,11 @@ export async function writeToErrorFile(message: string) {
   }
 }
 
-async function ifExists(path) {
+async function checkSize(path: string) {
   try {
-    await stat(path);
-    return true;
+    const fileStat = await stat(path);
+    return fileStat.size;
   } catch {
-    return false;
+    return null;
   }
 }
-
-// async function checkIfFileSizeInLimit(file: string) {
-//   try {
-//     const fileStat = await stat(file);
-//     if (fileStat.size > sizeLimitInKb * 1024) {
-//       return true;
-//     } else {
-//       return false;
-//     };
-//   } catch (err) {
-//     console.log(file);
-//     console.error('Error getting file size:', err);
-//     return false;
-//   }
-// }

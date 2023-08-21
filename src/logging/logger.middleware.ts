@@ -4,7 +4,7 @@ import { LoggingService } from './logging.service';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  constructor(private logger: LoggingService) {}
+  constructor(private logger: LoggingService) { }
 
   async use(req: Request, res: Response, next: NextFunction) {
     console.log('Request...');
@@ -19,9 +19,9 @@ export class LoggerMiddleware implements NestMiddleware {
       if (res.statusCode >= 500) {
         await this.logger.toLog('error', data);
       } else if (res.statusCode >= 400 && res.statusCode < 500) {
-        await this.logger.toLog('warning', data);
+        await this.logger.toLog('warn', data);
       } else {
-        await this.logger.toLog('info', data);
+        await this.logger.toLog('log', data);
       }
     });
     next();

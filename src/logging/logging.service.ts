@@ -1,30 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { writeToErrorFile, writeToFile } from './utils';
-
-enum errorMap {
-  info = 0,
-  warning = 1,
-  error = 2,
-}
+import { ReqData, logsMap } from './logging.models';
 
 @Injectable()
 export class LoggingService extends Logger {
-  logLevel = 0;
+  logLevelEnv = Number(process.env.LOG_LEVEL) || 1;
 
-  async toLog(logType: 'info' | 'warning' | 'error', data: ReqData) {
-    const logLevel = errorMap[logType];
-    if (logLevel < this.logLevel) return;
-    const dataToLog = `[Request] url: ${
-      data.url
-    }, query parameters: ${JSON.stringify(
-      data.queryParams,
-    )}, body: ${JSON.stringify(data.body)} [Response] status code: ${
-      data.responseStatusCode
-    }, message: ${data.message}`;
-    if (logType === 'info') {
+  async toLog(
+    logType: 'error' | 'warn' | 'log' | 'verboose' | 'debug',
+    data: ReqData,
+  ) {
+    const logLevel = logsMap[logType];
+    if (logLevel > this.logLevelEnv) return;
+    const dataToLog = `[Request] url: ${data.url
+      }, query parameters: ${JSON.stringify(
+        data.queryParams,
+      )}, body: ${JSON.stringify(data.body)} [Response] status code: ${data.responseStatusCode
+      }, message: ${data.message}`;
+    if (logType === 'log') {
       this.info(dataToLog);
     }
-    if (logType === 'warning') {
+    if (logType === 'warn') {
       this.warn(dataToLog);
     }
     if (logType === 'error') {
@@ -61,12 +57,4 @@ export class LoggingService extends Logger {
     }
     return message;
   }
-}
-
-export interface ReqData {
-  url: string;
-  queryParams: any;
-  body: string;
-  responseStatusCode: number;
-  message: string | 'Message?';
 }
