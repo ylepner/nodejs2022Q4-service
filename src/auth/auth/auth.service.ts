@@ -56,7 +56,10 @@ export class AuthService {
       const verify = await this.jwtService.verifyAsync(token);
       verify;
       const payload = { sub: verify.sub, username: verify.username };
-      this.generateAccessToken(payload);
+      const result = await this.generateAccessToken(payload);
+      return {
+        accessToken: result,
+      };
     } catch (error) {
       throw new UnauthorizedException('Invalid token');
     }

@@ -117,6 +117,29 @@ security:
   - bearerAuth: []
 
 paths:
+  /auth/refresh:
+    post:
+      tags:
+        - Refresh
+      summary: Refresh token
+      description: Endpoint to refresh a token.
+      operationId: refresh
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed successfully.
+        '401':
+          description: Invalid token.
+        '500':
+          description: Internal server error.
   /auth/login:
     post:
       tags:
